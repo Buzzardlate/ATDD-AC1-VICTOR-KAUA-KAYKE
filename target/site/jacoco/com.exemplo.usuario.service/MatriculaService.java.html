@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MatriculaService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">usuario-api-v2</a> &gt; <a href="index.source.html" class="el_package">com.exemplo.usuario.service</a> &gt; <span class="el_source">MatriculaService.java</span></div><h1>MatriculaService.java</h1><pre class="source lang-java linenums">package com.exemplo.usuario.service;
+
+import com.exemplo.usuario.domain.Assinatura;
+import com.exemplo.usuario.domain.Curso;
+import com.exemplo.usuario.domain.Matricula;
+import com.exemplo.usuario.domain.StatusMatricula;
+import com.exemplo.usuario.domain.Usuario;
+import com.exemplo.usuario.dto.MatriculaResponseDTO;
+import com.exemplo.usuario.repository.AssinaturaRepository;
+import com.exemplo.usuario.repository.CursoRepository;
+import com.exemplo.usuario.repository.MatriculaRepository;
+import com.exemplo.usuario.repository.UsuarioRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+// Camada: SERVICE.
+// Esta classe orquestra o caso de uso de matricula.
+@Service
+public class MatriculaService {
+
+    private final MatriculaRepository matriculaRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final CursoRepository cursoRepository;
+    private final AssinaturaRepository assinaturaRepository;
+
+    public MatriculaService(MatriculaRepository matriculaRepository,
+                            UsuarioRepository usuarioRepository,
+                            CursoRepository cursoRepository,
+<span class="nc" id="L31">                            AssinaturaRepository assinaturaRepository) {</span>
+<span class="nc" id="L32">        this.matriculaRepository = matriculaRepository;</span>
+<span class="nc" id="L33">        this.usuarioRepository = usuarioRepository;</span>
+<span class="nc" id="L34">        this.cursoRepository = cursoRepository;</span>
+<span class="nc" id="L35">        this.assinaturaRepository = assinaturaRepository;</span>
+<span class="nc" id="L36">    }</span>
+
+    public List&lt;MatriculaResponseDTO&gt; listarPorUsuario(Long usuarioId) {
+<span class="nc" id="L39">        return matriculaRepository.findByUsuarioId(usuarioId).stream().map(this::toDTO).toList();</span>
+    }
+
+    @Transactional
+    public MatriculaResponseDTO matricular(Long usuarioId, Long cursoId, boolean bonus) {
+        // 1) Buscar as entidades necessarias.
+<span class="nc" id="L45">        Usuario usuario = usuarioRepository.findById(usuarioId)</span>
+<span class="nc" id="L46">                .orElseThrow(() -&gt; new RuntimeException(&quot;Usuario nao encontrado&quot;));</span>
+
+<span class="nc" id="L48">        Curso curso = cursoRepository.findById(cursoId)</span>
+<span class="nc" id="L49">                .orElseThrow(() -&gt; new RuntimeException(&quot;Curso nao encontrado&quot;));</span>
+
+<span class="nc" id="L51">        Assinatura assinatura = assinaturaRepository.findByUsuarioId(usuarioId)</span>
+<span class="nc" id="L52">                .orElseThrow(() -&gt; new RuntimeException(&quot;Assinatura nao encontrada&quot;));</span>
+
+        // 2) Aplicar regra de negocio.
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (bonus) {</span>
+<span class="nc" id="L56">            assinatura.consumirCredito();</span>
+        }
+
+        // 3) Criar entidade do dominio.
+<span class="nc" id="L60">        Matricula matricula = new Matricula(usuario, curso, bonus);</span>
+
+        // 4) Persistir e devolver DTO.
+<span class="nc" id="L63">        return toDTO(matriculaRepository.save(matricula));</span>
+    }
+
+    @Transactional
+    public MatriculaResponseDTO concluir(Long matriculaId, Double notaFinal) {
+<span class="nc" id="L68">        Matricula matricula = matriculaRepository.findById(matriculaId)</span>
+<span class="nc" id="L69">                .orElseThrow(() -&gt; new RuntimeException(&quot;Matricula nao encontrada&quot;));</span>
+
+        // Regras de atualizacao do estado da matricula.
+<span class="nc" id="L72">        matricula.setStatus(StatusMatricula.APROVADO);</span>
+<span class="nc" id="L73">        matricula.setNotaFinal(notaFinal);</span>
+
+        // Se houve aproveitamento, a assinatura do usuario e atualizada.
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (matricula.concluidoComAproveitamento()) {</span>
+<span class="nc" id="L77">            Assinatura assinatura = assinaturaRepository.findByUsuarioId(matricula.getUsuario().getId())</span>
+<span class="nc" id="L78">                    .orElseThrow(() -&gt; new RuntimeException(&quot;Assinatura nao encontrada&quot;));</span>
+<span class="nc" id="L79">            assinatura.registrarConclusaoComSucesso();</span>
+        }
+
+<span class="nc" id="L82">        return toDTO(matriculaRepository.save(matricula));</span>
+    }
+
+    private MatriculaResponseDTO toDTO(Matricula matricula) {
+<span class="nc" id="L86">        return new MatriculaResponseDTO(</span>
+<span class="nc" id="L87">                matricula.getId(),</span>
+<span class="nc" id="L88">                matricula.getUsuario().getId(),</span>
+<span class="nc" id="L89">                matricula.getUsuario().getNome(),</span>
+<span class="nc" id="L90">                matricula.getCurso().getId(),</span>
+<span class="nc" id="L91">                matricula.getCurso().getTitulo(),</span>
+<span class="nc" id="L92">                matricula.getStatus().name(),</span>
+<span class="nc" id="L93">                matricula.getNotaFinal(),</span>
+<span class="nc" id="L94">                matricula.isBonus()</span>
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

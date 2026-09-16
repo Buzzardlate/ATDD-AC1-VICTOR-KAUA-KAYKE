@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Usuario.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">usuario-api-v2</a> &gt; <a href="index.source.html" class="el_package">com.exemplo.usuario.domain</a> &gt; <span class="el_source">Usuario.java</span></div><h1>Usuario.java</h1><pre class="source lang-java linenums">package com.exemplo.usuario.domain;
+
+import com.exemplo.usuario.domain.vo.EmailUsuario;
+import com.exemplo.usuario.domain.vo.NomeUsuario;
+import com.exemplo.usuario.domain.vo.SenhaCriptografada;
+import jakarta.persistence.*;
+
+// Camada: DOMINIO.
+// Usuario e uma entidade do negocio.
+@Entity
+@Table(name = &quot;usuarios&quot;)
+public class Usuario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // Nome, e-mail e senha foram encapsulados como Value Objects.
+    @Embedded
+    private NomeUsuario nome;
+
+    @Embedded
+    private EmailUsuario email;
+
+    @Embedded
+    private SenhaCriptografada senha;
+
+    // Relacao 1:1 com Assinatura.
+    // mappedBy = a outra entidade (Assinatura) possui a FK.
+    // cascade = ALL faz persistencia em cascata.
+    // orphanRemoval = remove a assinatura se ela deixar de estar vinculada.
+    @OneToOne(mappedBy = &quot;usuario&quot;, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Assinatura assinatura;
+
+<span class="nc" id="L35">    protected Usuario() {</span>
+<span class="nc" id="L36">    }</span>
+
+    // Construtor rico do dominio.
+    // Repare que a senha recebida aqui ja deve estar criptografada pela camada de service.
+<span class="fc" id="L40">    public Usuario(String nome, String email, String senhaCriptografada) {</span>
+<span class="fc" id="L41">        this.nome = new NomeUsuario(nome);</span>
+<span class="fc" id="L42">        this.email = new EmailUsuario(email);</span>
+<span class="fc" id="L43">        this.senha = new SenhaCriptografada(senhaCriptografada);</span>
+<span class="fc" id="L44">    }</span>
+
+    public Long getId() {
+<span class="nc" id="L47">        return id;</span>
+    }
+
+    public String getNome() {
+<span class="nc" id="L51">        return nome.getValor();</span>
+    }
+
+    public String getEmail() {
+<span class="nc" id="L55">        return email.getValor();</span>
+    }
+
+    public String getSenha() {
+<span class="nc" id="L59">        return senha.getValor();</span>
+    }
+
+    public Assinatura getAssinatura() {
+<span class="nc" id="L63">        return assinatura;</span>
+    }
+
+    // Alteracoes controladas do estado da entidade.
+    public void alterarNome(String nome) {
+<span class="nc" id="L68">        this.nome = new NomeUsuario(nome);</span>
+<span class="nc" id="L69">    }</span>
+
+    public void alterarEmail(String email) {
+<span class="nc" id="L72">        this.email = new EmailUsuario(email);</span>
+<span class="nc" id="L73">    }</span>
+
+    public void alterarSenhaCriptografada(String senhaCriptografada) {
+<span class="nc" id="L76">        this.senha = new SenhaCriptografada(senhaCriptografada);</span>
+<span class="nc" id="L77">    }</span>
+
+    // Mantem a consistencia da associacao bidirecional Usuario &lt;-&gt; Assinatura.
+    public void vincularAssinatura(Assinatura assinatura) {
+<span class="nc" id="L81">        this.assinatura = assinatura;</span>
+<span class="nc bnc" id="L82" title="All 4 branches missed.">        if (assinatura != null &amp;&amp; assinatura.getUsuario() != this) {</span>
+<span class="nc" id="L83">            assinatura.setUsuario(this);</span>
+        }
+<span class="nc" id="L85">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

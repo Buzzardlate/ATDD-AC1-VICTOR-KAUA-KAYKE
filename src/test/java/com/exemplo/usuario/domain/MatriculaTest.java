@@ -62,4 +62,39 @@ class MatriculaTest {
         // Assert
         assertEquals(StatusMatricula.REPROVADO, matricula.getStatus());
     }
+
+    @Test
+    void naoDevePermitirAsSeNaoEstiverEmRecuperacao() {
+        // Arrange: Finaliza o curso com nota alta para o status ficar como APROVADO
+        matricula.finalizarCurso(8.0);
+
+        // Assert: Agora o status é APROVADO, então ele vai cair no 'else' e lançar a exceção!
+        assertThrows(IllegalStateException.class, () -> {
+            matricula.realizarAvaliacaoSubstitutiva(8.0);
+        });
+    }
+
+    @Test
+    void deveRetornarVerdadeiroSeConcluidoComAproveitamento() {
+        // Arrange
+        matricula.finalizarCurso(8.5); // Isso muda o status para APROVADO
+
+        // Act
+        boolean aproveitamento = matricula.concluidoComAproveitamento();
+
+        // Assert
+        assertTrue(aproveitamento);
+    }
+
+    @Test
+    void deveRetornarFalsoSeNaoTiverAproveitamento() {
+        // Arrange
+        matricula.finalizarCurso(5.0); // Isso muda o status para EM_RECUPERACAO
+
+        // Act
+        boolean aproveitamento = matricula.concluidoComAproveitamento();
+
+        // Assert
+        assertFalse(aproveitamento);
+    }
 }

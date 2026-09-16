@@ -39,106 +39,105 @@ public class Matricula {
 <span class="nc" id="L39">    public Matricula() {</span>
 <span class="nc" id="L40">    }</span>
 
-    // Toda nova matricula nasce EM_ANDAMENTO.
-<span class="fc" id="L43">    public Matricula(Usuario usuario, Curso curso, boolean bonus) {</span>
-<span class="fc" id="L44">        this.usuario = usuario;</span>
-<span class="fc" id="L45">        this.curso = curso;</span>
-<span class="fc" id="L46">        this.bonus = bonus;</span>
-<span class="fc" id="L47">        this.status = StatusMatricula.EM_ANDAMENTO;</span>
-<span class="fc" id="L48">    }</span>
+<span class="fc" id="L42">    public Matricula(Usuario usuario, Curso curso, boolean bonus) {</span>
+<span class="fc" id="L43">        this.usuario = usuario;</span>
+<span class="fc" id="L44">        this.curso = curso;</span>
+<span class="fc" id="L45">        this.bonus = bonus;</span>
+<span class="fc" id="L46">        this.status = StatusMatricula.EM_ANDAMENTO;</span>
+<span class="fc" id="L47">    }</span>
 
     public Long getId() {
-<span class="nc" id="L51">        return id;</span>
+<span class="nc" id="L50">        return id;</span>
     }
 
     public Usuario getUsuario() {
-<span class="nc" id="L55">        return usuario;</span>
+<span class="nc" id="L54">        return usuario;</span>
     }
 
     public Curso getCurso() {
-<span class="nc" id="L59">        return curso;</span>
+<span class="nc" id="L58">        return curso;</span>
     }
 
     public StatusMatricula getStatus() {
-<span class="fc" id="L63">        return status;</span>
+<span class="fc" id="L62">        return status;</span>
     }
 
     public Double getNotaFinal() {
-<span class="nc" id="L67">        return notaFinal;</span>
+<span class="nc" id="L66">        return notaFinal;</span>
     }
 
     public Double getNotaAS() {
-<span class="fc" id="L71">        return notaAS;</span>
+<span class="fc" id="L70">        return notaAS;</span>
     }
 
     public boolean isBonus() {
-<span class="nc" id="L75">        return bonus;</span>
+<span class="nc" id="L74">        return bonus;</span>
     }
 
     public void setUsuario(Usuario usuario) {
-<span class="nc" id="L79">        this.usuario = usuario;</span>
-<span class="nc" id="L80">    }</span>
+<span class="nc" id="L78">        this.usuario = usuario;</span>
+<span class="nc" id="L79">    }</span>
 
     public void setCurso(Curso curso) {
-<span class="nc" id="L83">        this.curso = curso;</span>
-<span class="nc" id="L84">    }</span>
+<span class="nc" id="L82">        this.curso = curso;</span>
+<span class="nc" id="L83">    }</span>
 
     public void setStatus(StatusMatricula status) {
-<span class="nc" id="L87">        this.status = status;</span>
-<span class="nc" id="L88">    }</span>
+<span class="nc" id="L86">        this.status = status;</span>
+<span class="nc" id="L87">    }</span>
 
     public void setNotaFinal(Double notaFinal) {
-<span class="nc" id="L91">        this.notaFinal = notaFinal;</span>
-<span class="nc" id="L92">    }</span>
+<span class="nc" id="L90">        this.notaFinal = notaFinal;</span>
+<span class="nc" id="L91">    }</span>
 
     public void setBonus(boolean bonus) {
-<span class="nc" id="L95">        this.bonus = bonus;</span>
-<span class="nc" id="L96">    }</span>
+<span class="nc" id="L94">        this.bonus = bonus;</span>
+<span class="nc" id="L95">    }</span>
 
     public void setNotaAS(Double notaAS) {
-<span class="nc" id="L99">        this.notaAS = notaAS;</span>
-<span class="nc" id="L100">    }</span>
+<span class="nc" id="L98">        this.notaAS = notaAS;</span>
+<span class="nc" id="L99">    }</span>
 
     public int getCursosExtras() {
-<span class="fc" id="L103">        return cursosExtras;</span>
+<span class="fc" id="L102">        return cursosExtras;</span>
     }
 
     public void setCursosExtras(int cursosExtras) {
-<span class="nc" id="L107">        this.cursosExtras = cursosExtras;</span>
-<span class="nc" id="L108">    }</span>
+<span class="nc" id="L106">        this.cursosExtras = cursosExtras;</span>
+<span class="nc" id="L107">    }</span>
 
     public void finalizarCurso(Double notaObtida) {
-<span class="fc" id="L111">        this.notaFinal = notaObtida;</span>
+<span class="fc" id="L110">        this.notaFinal = notaObtida;</span>
 
-<span class="pc bpc" id="L113" title="1 of 4 branches missed.">        if (this.notaFinal &gt; 7.0 &amp;&amp; this.usuario != null) {</span>
-<span class="fc" id="L114">            this.status = StatusMatricula.APROVADO;</span>
-<span class="fc" id="L115">            this.cursosExtras = 3;</span>
+<span class="pc bpc" id="L112" title="1 of 4 branches missed.">        if (this.notaFinal &gt; 7.0 &amp;&amp; this.usuario != null) {</span>
+<span class="fc" id="L113">            this.status = StatusMatricula.APROVADO;</span>
+<span class="fc" id="L114">            this.cursosExtras = 3;</span>
         }
-<span class="pc bpc" id="L117" title="2 of 4 branches missed.">        else if (this.notaFinal &lt;= 7.0 &amp;&amp; this.notaFinal &gt;= 0.0) {</span>
-<span class="fc" id="L118">            this.status = StatusMatricula.EM_RECUPERACAO;</span>
-<span class="fc" id="L119">            this.cursosExtras = 0;</span>
+<span class="pc bpc" id="L116" title="2 of 4 branches missed.">        else if (this.notaFinal &lt;= 7.0 &amp;&amp; this.notaFinal &gt;= 0.0) {</span>
+<span class="fc" id="L117">            this.status = StatusMatricula.EM_RECUPERACAO;</span>
+<span class="fc" id="L118">            this.cursosExtras = 0;</span>
         }
-<span class="fc" id="L121">    }</span>
+<span class="fc" id="L120">    }</span>
 
     // Método que avalia a nota da AS
     public void realizarAvaliacaoSubstitutiva(Double nota) {
-<span class="pc bpc" id="L125" title="3 of 4 branches missed.">        if (this.status == StatusMatricula.EM_RECUPERACAO || this.status == StatusMatricula.EM_ANDAMENTO) {</span>
-<span class="fc" id="L126">            this.notaAS = nota;</span>
+<span class="pc bpc" id="L124" title="1 of 4 branches missed.">        if (this.status == StatusMatricula.EM_RECUPERACAO || this.status == StatusMatricula.EM_ANDAMENTO) {</span>
+<span class="fc" id="L125">            this.notaAS = nota;</span>
 
-<span class="pc bpc" id="L128" title="1 of 4 branches missed.">            if (this.notaAS != null &amp;&amp; this.notaAS &gt; 7.0) {</span>
-<span class="fc" id="L129">                this.status = StatusMatricula.APROVADO;</span>
-<span class="fc" id="L130">                this.cursosExtras = 3;</span>
+<span class="pc bpc" id="L127" title="1 of 4 branches missed.">            if (this.notaAS != null &amp;&amp; this.notaAS &gt; 7.0) {</span>
+<span class="fc" id="L128">                this.status = StatusMatricula.APROVADO;</span>
+<span class="fc" id="L129">                this.cursosExtras = 3;</span>
             } else {
-<span class="fc" id="L132">                this.status = StatusMatricula.REPROVADO;</span>
-<span class="fc" id="L133">                this.cursosExtras = 0;</span>
+<span class="fc" id="L131">                this.status = StatusMatricula.REPROVADO;</span>
+<span class="fc" id="L132">                this.cursosExtras = 0;</span>
             }
         } else {
-<span class="nc" id="L136">            throw new IllegalStateException(&quot;Aluno não está em recuperação.&quot;);</span>
+<span class="fc" id="L135">            throw new IllegalStateException(&quot;Aluno não está em recuperação.&quot;);</span>
         }
-<span class="fc" id="L138">    }</span>
+<span class="fc" id="L137">    }</span>
 
     public boolean concluidoComAproveitamento() {
-<span class="nc" id="L141">        return StatusMatricula.APROVADO.equals(this.status);</span>
+<span class="fc" id="L140">        return StatusMatricula.APROVADO.equals(this.status);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

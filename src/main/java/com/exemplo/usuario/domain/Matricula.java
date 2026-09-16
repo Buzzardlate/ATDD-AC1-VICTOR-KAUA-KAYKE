@@ -39,7 +39,6 @@ public class Matricula {
     public Matricula() {
     }
 
-    // Toda nova matricula nasce EM_ANDAMENTO.
     public Matricula(Usuario usuario, Curso curso, boolean bonus) {
         this.usuario = usuario;
         this.curso = curso;

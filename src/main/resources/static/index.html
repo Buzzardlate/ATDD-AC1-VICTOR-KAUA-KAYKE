@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>Plataforma de cursos - versão 2</h1>
+    <h1>Plataforma de cursos - Facens</h1>
     <p>Login HTTP Basic usado no front: <strong>admin / 123456</strong></p>
 
     <div class="grid">
@@ -44,11 +44,18 @@
         </div>
 
         <div class="card">
-            <h2>Concluir matrícula</h2>
+            <h2>Avaliação Final (AF)</h2>
             <input id="matriculaId" placeholder="ID da matrícula">
             <input id="notaFinal" placeholder="Nota final">
             <button onclick="concluirMatricula()">Concluir</button>
         </div>
+    </div>
+
+    <div class="card">
+        <h2>Avaliação Substitutiva (AS)</h2>
+        <input id="matriculaIdAS" placeholder="ID da matrícula">
+        <input id="notaAS" placeholder="Nota da AS">
+        <button onclick="realizarAS()">Enviar Nota AS</button>
     </div>
 
     <div class="card" style="margin-top:24px;">

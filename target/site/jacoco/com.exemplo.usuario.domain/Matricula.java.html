@@ -109,35 +109,34 @@ public class Matricula {
     public void finalizarCurso(Double notaObtida) {
 <span class="fc" id="L110">        this.notaFinal = notaObtida;</span>
 
-<span class="pc bpc" id="L112" title="1 of 4 branches missed.">        if (this.notaFinal &gt; 7.0 &amp;&amp; this.usuario != null) {</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (this.notaFinal &gt; 7.0) {</span>
 <span class="fc" id="L113">            this.status = StatusMatricula.APROVADO;</span>
 <span class="fc" id="L114">            this.cursosExtras = 3;</span>
+        } else {
+<span class="fc" id="L116">            this.status = StatusMatricula.EM_RECUPERACAO;</span>
+<span class="fc" id="L117">            this.cursosExtras = 0;</span>
         }
-<span class="pc bpc" id="L116" title="2 of 4 branches missed.">        else if (this.notaFinal &lt;= 7.0 &amp;&amp; this.notaFinal &gt;= 0.0) {</span>
-<span class="fc" id="L117">            this.status = StatusMatricula.EM_RECUPERACAO;</span>
-<span class="fc" id="L118">            this.cursosExtras = 0;</span>
-        }
-<span class="fc" id="L120">    }</span>
+<span class="fc" id="L119">    }</span>
 
     // Método que avalia a nota da AS
     public void realizarAvaliacaoSubstitutiva(Double nota) {
-<span class="pc bpc" id="L124" title="1 of 4 branches missed.">        if (this.status == StatusMatricula.EM_RECUPERACAO || this.status == StatusMatricula.EM_ANDAMENTO) {</span>
-<span class="fc" id="L125">            this.notaAS = nota;</span>
-
-<span class="pc bpc" id="L127" title="1 of 4 branches missed.">            if (this.notaAS != null &amp;&amp; this.notaAS &gt; 7.0) {</span>
-<span class="fc" id="L128">                this.status = StatusMatricula.APROVADO;</span>
-<span class="fc" id="L129">                this.cursosExtras = 3;</span>
-            } else {
-<span class="fc" id="L131">                this.status = StatusMatricula.REPROVADO;</span>
-<span class="fc" id="L132">                this.cursosExtras = 0;</span>
-            }
-        } else {
-<span class="fc" id="L135">            throw new IllegalStateException(&quot;Aluno não está em recuperação.&quot;);</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (this.status != StatusMatricula.EM_RECUPERACAO) {</span>
+<span class="fc" id="L124">            throw new IllegalStateException(&quot;Aluno não está em recuperação.&quot;);</span>
         }
-<span class="fc" id="L137">    }</span>
+
+<span class="fc" id="L127">        this.notaAS = nota;</span>
+
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (this.notaAS &gt; 7.0) {</span>
+<span class="fc" id="L130">            this.status = StatusMatricula.APROVADO;</span>
+<span class="fc" id="L131">            this.cursosExtras = 3;</span>
+        } else {
+<span class="fc" id="L133">            this.status = StatusMatricula.REPROVADO;</span>
+<span class="fc" id="L134">            this.cursosExtras = 0;</span>
+        }
+<span class="fc" id="L136">    }</span>
 
     public boolean concluidoComAproveitamento() {
-<span class="fc" id="L140">        return StatusMatricula.APROVADO.equals(this.status);</span>
+<span class="fc" id="L139">        return StatusMatricula.APROVADO.equals(this.status);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

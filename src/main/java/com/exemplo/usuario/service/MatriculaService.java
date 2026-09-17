@@ -56,6 +56,10 @@ public class MatriculaService {
             assinatura.consumirCredito();
         }
 
+        if (matriculaRepository.existsByUsuarioIdAndCursoId(usuarioId, cursoId)) {
+            throw new IllegalStateException("O aluno já possui matrícula neste curso.");
+        }
+
         // 3) Criar entidade do dominio.
         Matricula matricula = new Matricula(usuario, curso, bonus);
 
@@ -68,18 +72,40 @@ public class MatriculaService {
         Matricula matricula = matriculaRepository.findById(matriculaId)
                 .orElseThrow(() -> new RuntimeException("Matricula nao encontrada"));
 
-        // Regras de atualizacao do estado da matricula.
-        matricula.setStatus(StatusMatricula.APROVADO);
-        matricula.setNotaFinal(notaFinal);
+        matricula.finalizarCurso(notaFinal);
 
-        // Se houve aproveitamento, a assinatura do usuario e atualizada.
         if (matricula.concluidoComAproveitamento()) {
             Assinatura assinatura = assinaturaRepository.findByUsuarioId(matricula.getUsuario().getId())
                     .orElseThrow(() -> new RuntimeException("Assinatura nao encontrada"));
             assinatura.registrarConclusaoComSucesso();
+
         }
 
         return toDTO(matriculaRepository.save(matricula));
+    }
+
+    @Transactional
+    public MatriculaResponseDTO realizarAS(Long matriculaId, Double nota) {
+        Matricula matricula = matriculaRepository.findById(matriculaId)
+                .orElseThrow(() -> new RuntimeException("Matrícula não encontrada"));
+
+        // Aplica a regra de negócio do Domínio (que define APROVADO ou REPROVADO)
+        matricula.realizarAvaliacaoSubstitutiva(nota);
+
+        if (matricula.concluidoComAproveitamento()) {
+            Assinatura assinatura = assinaturaRepository.findByUsuarioId(matricula.getUsuario().getId())
+                    .orElseThrow(() -> new RuntimeException("Assinatura não encontrada"));
+            assinatura.registrarConclusaoComSucesso();
+
+            // Salva a aprovação no banco
+            matricula = matriculaRepository.save(matricula);
+        } else {
+            // Se reprovou na AS, deleta a matrícula para ele poder tentar novamente
+            matriculaRepository.delete(matricula);
+        }
+
+        // Retorna o DTO para o frontend saber o que aconteceu (mesmo se foi deletado)
+        return toDTO(matricula);
     }
 
     private MatriculaResponseDTO toDTO(Matricula matricula) {

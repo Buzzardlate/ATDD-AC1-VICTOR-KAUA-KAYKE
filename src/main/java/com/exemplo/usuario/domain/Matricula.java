@@ -109,11 +109,10 @@ public class Matricula {
     public void finalizarCurso(Double notaObtida) {
         this.notaFinal = notaObtida;
 
-        if (this.notaFinal > 7.0 && this.usuario != null) {
+        if (this.notaFinal > 7.0) {
             this.status = StatusMatricula.APROVADO;
             this.cursosExtras = 3;
-        }
-        else if (this.notaFinal <= 7.0 && this.notaFinal >= 0.0) {
+        } else {
             this.status = StatusMatricula.EM_RECUPERACAO;
             this.cursosExtras = 0;
         }
@@ -121,18 +120,18 @@ public class Matricula {
 
     // Método que avalia a nota da AS
     public void realizarAvaliacaoSubstitutiva(Double nota) {
-        if (this.status == StatusMatricula.EM_RECUPERACAO || this.status == StatusMatricula.EM_ANDAMENTO) {
-            this.notaAS = nota;
-
-            if (this.notaAS != null && this.notaAS > 7.0) {
-                this.status = StatusMatricula.APROVADO;
-                this.cursosExtras = 3;
-            } else {
-                this.status = StatusMatricula.REPROVADO;
-                this.cursosExtras = 0;
-            }
-        } else {
+        if (this.status != StatusMatricula.EM_RECUPERACAO) {
             throw new IllegalStateException("Aluno não está em recuperação.");
+        }
+
+        this.notaAS = nota;
+
+        if (this.notaAS > 7.0) {
+            this.status = StatusMatricula.APROVADO;
+            this.cursosExtras = 3;
+        } else {
+            this.status = StatusMatricula.REPROVADO;
+            this.cursosExtras = 0;
         }
     }
 

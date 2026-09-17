@@ -48,4 +48,11 @@ public class MatriculaRestController {
     public List<MatriculaResponseDTO> listarPorUsuario(@PathVariable Long usuarioId) {
         return service.listarPorUsuario(usuarioId);
     }
+
+    @PutMapping("/{id}/substitutiva")
+    @Operation(summary = "Realizar Avaliação Substitutiva")
+    public MatriculaResponseDTO realizarAS(@PathVariable Long id, @Valid @RequestBody ConcluirMatriculaRequestDTO dto) {
+        return service.realizarAS(id, dto.getNotaFinal());
+    }
+
 }

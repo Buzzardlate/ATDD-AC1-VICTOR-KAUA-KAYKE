@@ -10,4 +10,6 @@ public interface MatriculaRepository extends JpaRepository<Matricula, Long> {
 
     // O Spring Data entende "findByUsuarioId" e monta a consulta.
     List<Matricula> findByUsuarioId(Long usuarioId);
+
+    boolean existsByUsuarioIdAndCursoId(Long usuarioId, Long cursoId);
 }

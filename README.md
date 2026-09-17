@@ -1,1 +1,1 @@
-Utilizado o BDD do Kayke, na planilha dos BDDs.
+Utilizado o US do Kayke, na planilha das USs e BDDs.
